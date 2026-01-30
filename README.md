@@ -220,11 +220,18 @@ class Settings extends Component
 |----------------------|----------|----------------|-------------------------------------------------------------|
 | `form`               | `array`  | `[]`           | The form data to track                                      |
 | `save-method`        | `string` | `saveChanges`  | The Livewire method to call on save                         |
+| `color`              | `string` | `blue`         | Save button color (see available colors below)              |
 | `position`           | `string` | `bottom`       | Bar position: `top` or `bottom`                             |
 | `prevent-navigation` | `bool`   | `false`        | Show browser confirmation when leaving with unsaved changes |
 | `message`            | `string` | *(translated)* | Custom message text                                         |
 | `save-label`         | `string` | *(translated)* | Custom save button label                                    |
 | `discard-label`      | `string` | *(translated)* | Custom discard button label                                 |
+
+### Available Colors
+
+The `color` prop accepts any of the following Tailwind CSS color names:
+
+`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`
 
 ### Examples
 
@@ -240,6 +247,14 @@ class Settings extends Component
 
 ```blade
 <x-unsaved-changes :$form prevent-navigation>
+    ...
+</x-unsaved-changes>
+```
+
+**Custom color:**
+
+```blade
+<x-unsaved-changes :$form color="green">
     ...
 </x-unsaved-changes>
 ```
