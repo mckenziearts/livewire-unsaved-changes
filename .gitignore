@@ -1,0 +1,11 @@
+/.idea
+/.phpunit.cache
+/build
+/coverage
+/vendor
+/vendor.nosync
+/.vscode
+/node_modules
+.DS_Store
+.phpunit.cache
+.phpunit.result.cache

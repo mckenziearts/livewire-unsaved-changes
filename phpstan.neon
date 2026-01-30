@@ -1,0 +1,9 @@
+parameters:
+    level: max
+    paths:
+        - src
+
+    ignoreErrors:
+        - identifier: trait.unused
+        - identifier: assign.propertyType
+        - identifier: return.type

@@ -1,0 +1,28 @@
+name: CI Setup
+description: "Sets up the environment for jobs during CI workflow"
+
+runs:
+  using: composite
+  steps:
+    - name: 🐘 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: dom, mbstring, zip, fileinfo, intl, curl
+        tools: composer:latest
+        coverage: xdebug
+    - name: ℹ Setup Problem Matches
+      shell: sh
+      run: |
+        echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+    - name: 🗂 Get composer cache directory
+      id: composer-cache
+      shell: sh
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+    - name: Cache dependencies
+      uses: actions/cache@v5
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-

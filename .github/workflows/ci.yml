@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: 8.4
+  NODE_VERSION: 22
+
+jobs:
+  quality:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 🕵️‍♂ Laravel Pint
+            command: composer test:lint
+            cache-path: ""
+            cache-key: ""
+          - name: 🕵️‍♂ PHPStan
+            command: composer test:types
+            cache-path: /tmp/phpstan
+            cache-key: phpstan
+          - name: 🕵️‍♂ Type Coverage
+            command: composer test:type-coverage
+            cache-path: ""
+            cache-key: ""
+          - name: Composer Validate & Audit
+            command: |
+              composer validate
+              composer audit || {
+                EXIT_CODE=$?
+                echo "⚠️  Composer audit found vulnerabilities."
+                # Check if output contains high or critical severity
+                if composer audit 2>&1 | grep -qiE "(severity.*high|severity.*critical)"; then
+                  echo "❌ Found high or critical severity vulnerabilities - failing!"
+                  exit 1
+                else
+                  echo "ℹ️  Only low/moderate severity vulnerabilities found (non-blocking)"
+                  exit 0
+                fi
+              }
+            cache-path: ""
+            cache-key: ""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: 🔮 Install Composer Dependencies
+        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Cache Tool
+        if: matrix.cache-path != ''
+        uses: actions/cache@v5
+        with:
+          path: ${{ matrix.cache-path }}
+          key: ${{ matrix.cache-key }}-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ matrix.cache-key }}-
+
+      - name: Run ${{ matrix.name }}
+        run: ${{ matrix.command }}
+
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.3, 8.4]
+        laravel: [12.*, 11.*]
+        dependency-version: [prefer-stable]
+        include:
+          - laravel: 12.*
+            testbench: 10.*
+          - laravel: 11.*
+            testbench: 9.*
+
+    name: Tests PHP${{ matrix.php }} - ${{ matrix.dependency-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, mbstring, zip, fileinfo, intl, curl
+          coverage: pcov
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        shell: bash
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: dependencies-php-${{ matrix.php }}-version-${{ matrix.dependency-version }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: dependencies-php-${{ matrix.php }}-version-${{ matrix.dependency-version }}-composer-
+
+      - name: Install Composer dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
+      - name: Run Pest Tests
+        run: composer test:unit

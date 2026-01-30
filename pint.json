@@ -1,0 +1,15 @@
+{
+  "preset": "laravel",
+  "notPath": [
+    "tests/TestCase.php"
+  ],
+  "declare_parentheses": true,
+  "declare_strict_types": true,
+  "lowercase_keywords": true,
+  "lowercase_static_reference": true,
+  "fully_qualified_strict_types": true,
+  "strict_comparison": true,
+  "use_arrow_functions": true,
+  "visibility_required": true,
+  "void_return": true
+}

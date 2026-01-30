@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./resources/css/unsaved-changes.css -o ./resources/dist/unsaved-changes.css --watch",
+    "build": "npx @tailwindcss/cli -i ./resources/css/unsaved-changes.css -o ./resources/dist/unsaved-changes.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}
