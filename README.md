@@ -1,5 +1,5 @@
 <p>
-    <a href="https://github.com/mckenziearts/livewire-unsaved-changes/actions"><img src="https://github.com/mckenziearts/livewire-unsaved-changes/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/mckenziearts/livewire-unsaved-changes/actions"><img src="https://github.com/mckenziearts/livewire-unsaved-changes/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
     <a href="https://github.com/mckenziearts/livewire-unsaved-changes/actions/workflows/quality.yml"><img src="https://github.com/mckenziearts/livewire-unsaved-changes/actions/workflows/quality.yml/badge.svg" alt="Coding Standards" /></a>
     <a href="https://packagist.org/packages/mckenziearts/livewire-unsaved-changes"><img src="https://img.shields.io/packagist/dt/mckenziearts/livewire-unsaved-changes" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/mckenziearts/livewire-unsaved-changes"><img src="https://img.shields.io/packagist/v/mckenziearts/livewire-unsaved-changes" alt="Latest Stable Version"></a>
