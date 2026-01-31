@@ -73,7 +73,7 @@ php artisan vendor:publish --tag="livewire-unsaved-changes-translations"
 Wrap your form with the `<x-unsaved-changes>` component and use `x-model` to bind your inputs:
 
 ```blade
-<x-unsaved-changes :data="$form" save-method="save">
+<x-unsaved-changes :$form save-method="save">
     <div class="space-y-4">
         <input x-model="form.name" type="text" />
         <input x-model="form.email" type="email" />
