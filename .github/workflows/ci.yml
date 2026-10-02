@@ -66,7 +66,7 @@ jobs:
 
       - name: Cache Tool
         if: matrix.cache-path != ''
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ matrix.cache-path }}
           key: ${{ matrix.cache-key }}-${{ hashFiles('composer.lock') }}
@@ -110,7 +110,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: dependencies-php-${{ matrix.php }}-version-${{ matrix.dependency-version }}-composer-${{ hashFiles('composer.json') }}
